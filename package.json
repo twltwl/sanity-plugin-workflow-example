@@ -1,21 +1,17 @@
 {
-  "name": "sanity-plugin-workflow",
+  "name": "sanity-plugin-workflow-elux",
   "version": "1.0.5",
   "description": "A demonstration of a custom content publishing workflow using Sanity.",
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
-  "homepage": "https://github.com/sanity-io/sanity-plugin-workflow#readme",
-  "bugs": {
-    "url": "https://github.com/sanity-io/sanity-plugin-workflow/issues"
-  },
   "repository": {
     "type": "git",
-    "url": "git@github.com:sanity-io/sanity-plugin-workflow.git"
+    "url": "git@github.com:twltwl/sanity-plugin-workflow.git"
   },
   "license": "MIT",
-  "author": "Sanity.io <hello@sanity.io>",
+  "author": "Tommy Ljungberg",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",

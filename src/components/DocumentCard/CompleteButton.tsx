@@ -1,13 +1,58 @@
 import {CheckmarkIcon} from '@sanity/icons'
-import {Box, Button, Text, Tooltip, useToast} from '@sanity/ui'
+import {
+  Box,
+  Button,
+  Text,
+  ToastContextValue,
+  Tooltip,
+  useToast,
+} from '@sanity/ui'
 import React from 'react'
-import {useClient} from 'sanity'
+import {SanityClient, useClient} from 'sanity'
 
 import {API_VERSION} from '../../constants'
 
 type CompleteButtonProps = {
   documentId: string
   disabled: boolean
+}
+
+async function moveDraftToPublished(
+  client: SanityClient,
+  publishedId: string,
+  toast: ToastContextValue
+) {
+  const draftId = `drafts.${publishedId}`
+
+  try {
+    const draftDoc = await client.getDocument(draftId)
+
+    if (!draftDoc) {
+      toast.push({
+        status: 'error',
+        title: `No draft document found with _id:', ${draftId}`,
+      })
+      return
+    }
+
+    await client.createOrReplace({
+      ...draftDoc,
+      _id: publishedId,
+    })
+
+    toast.push({
+      status: 'success',
+      title: `Document published successfully with _id:', ${publishedId}`,
+    })
+
+    await client.delete(draftId)
+    toast.push({
+      status: 'success',
+      title: `Draft document deleted successfully::', ${draftId}`,
+    })
+  } catch (error) {
+    console.error('Error publishing the document:', error)
+  }
 }
 
 export default function CompleteButton(props: CompleteButtonProps) {
@@ -23,6 +68,9 @@ export default function CompleteButton(props: CompleteButtonProps) {
         if (!id) {
           return
         }
+
+        // publish the document
+        moveDraftToPublished(client, id, toast)
 
         client
           .delete(`workflow-metadata.${id}`)
